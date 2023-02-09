@@ -393,27 +393,14 @@ public class OldThumbUpView extends View implements View.OnClickListener {
         String oldNum = String.valueOf(count);
         String newNum = String.valueOf(count + change);
 
-        int oldNumLen = oldNum.length();
-        int newNumLen = newNum.length();
-
-        if (oldNumLen != newNumLen) {
-            nums[0] = "";
-            nums[1] = oldNum;
-            nums[2] = newNum;
-        } else {
-            for (int i = 0; i < oldNumLen; i++) {
-                char oldC1 = oldNum.charAt(i);
-                char newC1 = newNum.charAt(i);
-                if (oldC1 != newC1) {
-                    if (i == 0) {
-                        nums[0] = "";
-                    } else {
-                        nums[0] = newNum.substring(0, i);
-                    }
-                    nums[1] = oldNum.substring(i);
-                    nums[2] = newNum.substring(i);
-                    break;
-                }
+        for (int i = 0; i < oldNum.length(); i++) {
+            char oldC1 = oldNum.charAt(i);
+            char newC1 = newNum.charAt(i);
+            if (oldC1 != newC1) {
+                nums[0] = i == 0 ? "" : newNum.substring(0, i);
+                nums[1] = oldNum.substring(i);
+                nums[2] = newNum.substring(i);
+                break;
             }
         }
     }

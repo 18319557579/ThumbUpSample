@@ -27,8 +27,8 @@ import android.view.animation.OvershootInterpolator;
  * Desc：仿即刻App点赞效果
  */
 public class OldThumbUpView extends View implements View.OnClickListener {
-    private static final float SCALE_MIN = 0.9f;
-    private static final float SCALE_MAX = 1f;
+    private static final float SCALE_MIN = 0.5f;  //拇指缩放的比例
+    private static final float SCALE_MAX = 1f;  //拇指原比例
 
     //图标大小
     private static final float THUMB_WIDTH = 20f;
@@ -39,17 +39,17 @@ public class OldThumbUpView extends View implements View.OnClickListener {
     private static final float TEXT_DEFAULT_SIZE = 15;
 
     //缩放动画的时间
-    private static final int SCALE_DURING = 150;
+    private static final int SCALE_DURING = 2000;
     //圆圈扩散动画的时间
-    private static final int RADIUS_DURING = 100;
+    private static final int RADIUS_DURING = 2000;
     //圆圈颜色
     private static final int START_COLOR = Color.parseColor("#00e24d3d");
-    private static final int END_COLOR = Color.parseColor("#88e24d3d");
+    private static final int END_COLOR = Color.parseColor("#00FF00");
     //文本颜色
     private static final int TEXT_DEFAULT_COLOR = Color.parseColor("#cccccc");
     private static final int TEXT_DEFAULT_END_COLOR = Color.parseColor("#00cccccc");
 
-    private int dp_2;
+    private int dp_2;  //圆圈的宽度
     private int dp_8;
 
     //圆圈扩散的最小最大值，根据图标大小计算得出
@@ -107,7 +107,7 @@ public class OldThumbUpView extends View implements View.OnClickListener {
     public OldThumbUpView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.OldThumbUpView);
-        count = typedArray.getInt(R.styleable.OldThumbUpView_o_tuv_count, 0);
+        count = typedArray.getInteger(R.styleable.OldThumbUpView_o_tuv_count, 0);
         typedArray.recycle();
         init();
     }
@@ -132,7 +132,7 @@ public class OldThumbUpView extends View implements View.OnClickListener {
         shining = BitmapFactory.decodeResource(getResources(), R.drawable.ic_messages_like_selected_shining);
 
         mClipPath = new Path();
-        mClipPath.addCircle(mCircleX, mCircleY, RADIUS_MAX, Path.Direction.CW);
+//        mClipPath.addCircle(mCircleX, mCircleY, RADIUS_MAX, Path.Direction.CW);
         mCirclePaint.setColor(START_COLOR);
 
         setOnClickListener(this);
@@ -140,19 +140,19 @@ public class OldThumbUpView extends View implements View.OnClickListener {
 
     private void initSize() {
         dp_2 = dip2px(2);
-        dp_8 = dip2px(8);
-        mScale = 1;
+        dp_8 = dip2px(8);  //拇指的相对于顶部的垂直偏移，这样子发光和拇指才能很好的配合
+        mScale = 1;  //这个是拇指的缩放比例
 
-        RADIUS_MIN = dp_8;//圆扩散的最小半径
+        RADIUS_MIN = 0;//圆扩散的最小半径  //这里四点遮挡和圆共用这2个属性，当圆扩散开时，clip能展示的面积也越来越大
         RADIUS_MAX = dip2px(16);//为了包住拇指和点，以中点为中心的最小半径，即扩散的最大半径
 
         mCircleX = dip2px(THUMB_WIDTH / 2);
-        mCircleY = dip2px(18);//这个距离是拇指的中点的位置
+        mCircleY = dip2px(18);//这个距离是拇指的中点的位置  //就是说这个扩散的圆偏下，可以实现圆之扩散在拇指的中间
 
         drawablePadding = dp_2 * 2;
-        textStartX = dip2px(THUMB_WIDTH) + drawablePadding;
-        textSize = TEXT_DEFAULT_SIZE;
-        nums = new String[]{String.valueOf(count), "", ""};
+        textStartX = dip2px(THUMB_WIDTH);  //文字开始的位置，为图标的宽度+2*圆圈的边框宽度
+        textSize = TEXT_DEFAULT_SIZE;  //文字的字号
+        nums = new String[]{String.valueOf(count), "", ""};  //初始之数字
         OFFSET_MIN = 0;
         OFFSET_MAX = 1.5f * sp2px(textSize);
 
@@ -202,14 +202,14 @@ public class OldThumbUpView extends View implements View.OnClickListener {
         mClipPath = new Path();
         mClipPath.addCircle(startX + mCircleX, startY + mCircleY, mRadius, Path.Direction.CW);
 
-        float fraction = (RADIUS_MAX - radius) / (RADIUS_MAX - RADIUS_MIN);
-        mCirclePaint.setColor((int) evaluate(fraction, START_COLOR, END_COLOR));
+        float fraction = (RADIUS_MAX - radius) / (RADIUS_MAX - RADIUS_MIN);  //求出现在扩散的比例
+        mCirclePaint.setColor((int) evaluate(fraction, START_COLOR, END_COLOR));  //根据比例设定现在颜色
 
         postInvalidate();
     }
 
     public float getCircleScale() {
-        return RADIUS_MAX;
+        return RADIUS_MIN;
     }
 
     public void setThumbUpClickListener(ThumbUpClickListener thumbUpClickListener) {
@@ -256,14 +256,14 @@ public class OldThumbUpView extends View implements View.OnClickListener {
 
         switch (specMode) {
             case MeasureSpec.UNSPECIFIED:
-                result = specSize;
+                result = specSize;  //如果宽度无限制，就用传过来的
                 break;
             case MeasureSpec.AT_MOST:
                 result = getContentWidth();
                 break;
             case MeasureSpec.EXACTLY:
                 result = specSize;
-                result = Math.max(getContentWidth(), result);
+                result = Math.max(getContentWidth(), result);  //如果限制确定值，则取限制值和自己计算值中的较大值
                 break;
         }
         return result;
@@ -292,13 +292,13 @@ public class OldThumbUpView extends View implements View.OnClickListener {
     private int getContentWidth() {
         int result;
         result = (int) (dip2px(THUMB_WIDTH) + drawablePadding + mTextPaint.measureText(String.valueOf(count)));
-        result += getPaddingLeft() + getPaddingRight();
+        result += getPaddingLeft() + getPaddingRight();  //如果不加上这条，那么xml中的paddingLeft和paddingRight属性将失效
         return result;
     }
 
     private int getContentHeight() {
         int result;
-        result = Math.max(sp2px(textSize), dip2px(THUMB_HEIGHT + SHINING_HEIGHT) - dp_8);
+        result = Math.max(sp2px(textSize), dip2px(THUMB_HEIGHT ) + dp_8);
         result += getPaddingTop() + getPaddingBottom();
         return result;
     }
@@ -307,10 +307,15 @@ public class OldThumbUpView extends View implements View.OnClickListener {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         startX = (int) ((w - (dip2px(THUMB_WIDTH) + drawablePadding + mTextPaint.measureText(String.valueOf(count)))) / 2);
-        startY = (h - Math.max(sp2px(textSize), dip2px(THUMB_HEIGHT + SHINING_HEIGHT) - dp_8)) / 2;
+        startY = (h - Math.max(sp2px(textSize), dip2px(THUMB_HEIGHT ) + dp_8)) / 2;
 
-        mClipPath = new Path();
-        mClipPath.addCircle(startX + mCircleX, startY + mCircleY, RADIUS_MAX, Path.Direction.CW);
+        Log.d("OldThumbUpView", "onSizeChanged_W" + w + "/" + (dip2px(THUMB_WIDTH) + drawablePadding +
+                mTextPaint.measureText(String.valueOf(count))) + "/" + startX );
+        Log.d("OldThumbUpView", "onSizeChanged_H" + h + "/" + sp2px(textSize) + "/" + (dip2px(THUMB_HEIGHT + SHINING_HEIGHT) - dp_8) +
+                "/" + startY);
+
+//        mClipPath = new Path();
+//        mClipPath.addCircle(startX + mCircleX, startY + mCircleY, RADIUS_MAX, Path.Direction.CW);
     }
 
     @Override
@@ -343,26 +348,29 @@ public class OldThumbUpView extends View implements View.OnClickListener {
 
     private void drawIcon(Canvas canvas) {
         if (isThumbUp) {
+
             if (mClipPath != null) {
                 canvas.save();
                 canvas.clipPath(mClipPath);
-                canvas.drawBitmap(shining, startX + dp_2, startY, mBitmapPaint);
+                canvas.drawBitmap(shining, startX, startY, mBitmapPaint);  //画一部分被遮住了的闪光
                 canvas.restore();
 
-                canvas.drawCircle(startX + mCircleX, startY + mCircleY, mRadius, mCirclePaint);
+                canvas.drawCircle(startX + mCircleX, startY + mCircleY, mRadius, mCirclePaint);  //画圆
             } else {//为了保险，虽然正常情况mClipPath都不会为null
                 canvas.drawBitmap(shining, startX + dp_2, startY, mBitmapPaint);
             }
 
-            canvas.drawBitmap(thumbUp, startX, startY + dp_8, mBitmapPaint);
+            canvas.drawBitmap(thumbUp, startX, startY + dp_8, mBitmapPaint);  //画拇指
         } else {
             canvas.drawBitmap(notThumbUp, startX, startY + dp_8, mBitmapPaint);
         }
+
+//        Log.d("Daisy", "当前是否是点赞 " + isThumbUp);
     }
 
     private void drawText(Canvas canvas) {
         Paint.FontMetricsInt fontMetrics = mTextPaint.getFontMetricsInt();
-        float y = (dip2px(THUMB_HEIGHT + SHINING_HEIGHT) - fontMetrics.bottom - fontMetrics.top) / 2;
+        float y = (dip2px(THUMB_HEIGHT + SHINING_HEIGHT) - fontMetrics.descent - fontMetrics.ascent) / 2;
 
         mTextPaint.setColor(TEXT_DEFAULT_COLOR);
         canvas.drawText(String.valueOf(nums[0]), startX + textStartX, startY + y, mTextPaint);
@@ -372,9 +380,11 @@ public class OldThumbUpView extends View implements View.OnClickListener {
         float fraction = (OFFSET_MAX - Math.abs(mOldOffsetY)) / (OFFSET_MAX - OFFSET_MIN);
 
         mTextPaint.setColor((Integer) evaluate(fraction, TEXT_DEFAULT_END_COLOR, TEXT_DEFAULT_COLOR));
+        Log.d("Daisy", "文字颜色1 " + Integer.toHexString((Integer) evaluate(fraction, TEXT_DEFAULT_END_COLOR, TEXT_DEFAULT_COLOR)));
         canvas.drawText(String.valueOf(nums[1]), startX + textStartX + textWidth * nums[0].length(), startY + y - mOldOffsetY, mTextPaint);
 
         mTextPaint.setColor((Integer) evaluate(fraction, TEXT_DEFAULT_COLOR, TEXT_DEFAULT_END_COLOR));
+        Log.d("Daisy", "文字颜色2 " + Integer.toHexString((Integer) evaluate(fraction, TEXT_DEFAULT_COLOR, TEXT_DEFAULT_END_COLOR)));
         canvas.drawText(String.valueOf(nums[2]), startX + textStartX + textWidth * nums[0].length(), startY + y - mNewOffsetY, mTextPaint);
     }
 
@@ -408,8 +418,11 @@ public class OldThumbUpView extends View implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (System.currentTimeMillis() - lastClickTime < SCALE_DURING + RADIUS_DURING) {
+            Log.d("OldThumbUpView", "当前还没到时间");
             return;
         }
+        Log.d("OldThumbUpView", "可以点击了");
+
         lastClickTime = System.currentTimeMillis();
         cancelAnim();
         if (isThumbUp) {
@@ -439,6 +452,7 @@ public class OldThumbUpView extends View implements View.OnClickListener {
             @Override
             public void onAnimRealEnd(Animator animation) {
                 isThumbUp = true;
+                Log.d("Daisy", "变小动画已结束");
             }
         });
 
@@ -450,7 +464,7 @@ public class OldThumbUpView extends View implements View.OnClickListener {
         thumbUpScale.setInterpolator(new OvershootInterpolator());
 
         ObjectAnimator circleScale = ObjectAnimator.ofFloat(this, "circleScale", RADIUS_MIN, RADIUS_MAX);
-        thumbUpScale.setDuration(RADIUS_DURING);
+        circleScale.setDuration(RADIUS_DURING);
 
         AnimatorSet set = new AnimatorSet();
         set.play(thumbUpScale).with(circleScale);
@@ -477,6 +491,7 @@ public class OldThumbUpView extends View implements View.OnClickListener {
             @Override
             public void onAnimRealEnd(Animator animation) {
                 isThumbUp = false;
+                Log.d("Daisy", "变大动画已结束");
             }
         });
 
@@ -571,4 +586,6 @@ public class OldThumbUpView extends View implements View.OnClickListener {
 
         return Math.round(a) << 24 | Math.round(r) << 16 | Math.round(g) << 8 | Math.round(b);
     }
+
+
 }

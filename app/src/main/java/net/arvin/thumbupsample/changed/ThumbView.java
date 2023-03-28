@@ -102,7 +102,7 @@ public class ThumbView extends View {
         mCirclePoint.y = mThumbPoint.y + mThumbHeight / 2;
 
         mRadiusMax = Math.max(mCirclePoint.x - getPaddingLeft(), mCirclePoint.y - getPaddingTop());
-        mRadiusMin = TuvUtils.dip2px(getContext(), 8);//这个值是根据点击效果调整得到的
+        mRadiusMin = 0;//这个值是根据点击效果调整得到的
         mClipPath = new Path();
         mClipPath.addCircle(mCirclePoint.x, mCirclePoint.y, mRadiusMax, Path.Direction.CW);
     }

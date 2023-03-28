@@ -54,7 +54,8 @@ public class CountView extends View {
 
     public CountView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CountView);
+        int[] aaa = new int[]{R.styleable.CountView_cv_count, R.styleable.CountView_cv_text_color, R.styleable.CountView_cv_text_size};
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, aaa);
         mCount = typedArray.getInt(R.styleable.CountView_cv_count, 0);
         mTextColor = typedArray.getColor(R.styleable.CountView_cv_text_color, Color.parseColor(DEFAULT_TEXT_COLOR));
         mTextSize = typedArray.getDimension(R.styleable.CountView_cv_text_size, TuvUtils.sp2px(context, 15f));
@@ -161,16 +162,25 @@ public class CountView extends View {
         super.onDraw(canvas);
 
         //不变的部分
-        mTextPaint.setColor(mTextColor);
-        canvas.drawText(String.valueOf(mTexts[0]), mTextPoints[0].x, mTextPoints[0].y, mTextPaint);
+        if (!mTexts[0].equals("")) {
+            mTextPaint.setColor(mTextColor);
+            canvas.drawText(String.valueOf(mTexts[0]), mTextPoints[0].x, mTextPoints[0].y, mTextPaint);
+        }
+
 
         //变化前部分
-        mTextPaint.setColor((Integer) TuvUtils.evaluate(mFraction, mEndTextColor, mTextColor));
-        canvas.drawText(String.valueOf(mTexts[1]), mTextPoints[1].x, mTextPoints[1].y, mTextPaint);
+        if (!mTexts[1].equals("")) {
+            mTextPaint.setColor((Integer) TuvUtils.evaluate(mFraction, mEndTextColor, mTextColor));
+            canvas.drawText(String.valueOf(mTexts[1]), mTextPoints[1].x, mTextPoints[1].y, mTextPaint);
+        }
+
 
         //变化后部分
-        mTextPaint.setColor((Integer) TuvUtils.evaluate(mFraction, mTextColor, mEndTextColor));
-        canvas.drawText(String.valueOf(mTexts[2]), mTextPoints[2].x, mTextPoints[2].y, mTextPaint);
+        if (!mTexts[2].equals("")) {
+            mTextPaint.setColor((Integer) TuvUtils.evaluate(mFraction, mTextColor, mEndTextColor));
+            canvas.drawText(String.valueOf(mTexts[2]), mTextPoints[2].x, mTextPoints[2].y, mTextPaint);
+        }
+
     }
 
     @Override

@@ -7,15 +7,16 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:orientation="vertical"
-    tools:context="net.arvin.thumbupsample.MainActivity">
+    tools:context="net.arvin.thumbupsample.MainActivity"
+    android:background="#87CEEB">
 
     <net.arvin.thumbupsample.OldThumbUpView
         android:id="@+id/oldThumbUpView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="10dp"
-        app:o_tuv_count="109"/>
+        app:o_tuv_count="109"
+        android:background="#D02090"/>
 
 
     <net.arvin.thumbupsample.changed.ThumbUpView
@@ -23,8 +24,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="10dp"
-        app:tuv_count="109"/>
+        app:tuv_count="109"
+        android:background="#FF7F00"/>
+
+    <net.arvin.thumbupsample.imitate.ImitateThumbUpView
+        android:id="@+id/imitateThumbUpView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:imitate_tuv="109"/>
 
     <EditText
         android:id="@+id/ed_num"
@@ -39,5 +47,35 @@
         android:onClick="setNum"
         android:text="设置"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设置"
+        android:onClick="setNum"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="skip"
+        android:text="跳转"/>
+
+    <Button
+        android:id="@+id/btn_judge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="判断"
+        android:layout_marginTop="20dp"/>
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消"/>
+
+    <Button
+        android:id="@+id/btn_manual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="手动点赞"/>
 
 </LinearLayout>

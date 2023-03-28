@@ -22,5 +22,9 @@
         <attr name="tuv_drawable_padding" format="dimension"/>
         <attr name="tuv_isThumbUp" format="boolean"/>
     </declare-styleable>
+    
+    <declare-styleable name="ImitateThumbUpView">
+        <attr name="imitate_tuv" format="integer"/>
+    </declare-styleable>
 
 </resources>

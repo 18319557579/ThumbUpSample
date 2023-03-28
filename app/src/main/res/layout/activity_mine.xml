@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6CA6CD">
+
+
+    <net.arvin.thumbupsample.mine.UnspecifiedView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffff" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!--<View
+            android:layout_width="wrap_content"
+            android:layout_height="600dp"
+            android:background="#FFFF00"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分割线"/>-->
+
+
+
+    </ScrollView>
+
+    <!--<net.arvin.thumbupsample.mine.MyTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_purple"/>-->
+
+    <!--<net.arvin.thumbupsample.mine.UnspecifiedView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ffff"/>-->
+
+</LinearLayout>

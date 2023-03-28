@@ -133,7 +133,10 @@ public class ImitateThumbUpView extends View implements View.OnClickListener {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(getHandledWidth(widthMeasureSpec), getHandleHeight(heightMeasureSpec));
+        int www = getHandledWidth(widthMeasureSpec);
+        int hhh = getHandleHeight(heightMeasureSpec);
+        Log.d("Daisy", "测量结果" + www + " / " + hhh);
+        setMeasuredDimension(www, hhh);
     }
 
     private int getHandledWidth(int measureSpec) {
@@ -184,8 +187,16 @@ public class ImitateThumbUpView extends View implements View.OnClickListener {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        Log.d("Daisy", "尺寸发生了变化" + w + " / " +  h + " / " + oldw + " / " + oldh);
+
         startX = (int)( ( w - getContentWidth() ) / 2 );
         startY = (int)( ( h - getContentHeight() ) / 2 );
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        Log.d("Daisy", "布局" + changed + " / " +  left + " / " + top + " / " + right + " / " + bottom);
     }
 
     //todo 这两个动画可以合二为一
